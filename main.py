@@ -6,7 +6,7 @@ while True:
     user_input =   user_input.strip().lower()
 
 
-    if  "add" in user_input:
+    if  user_input.startswith("add"):
         file = open("todos.txt", "r")
         todos = file.readlines()
         file.close()
@@ -18,7 +18,7 @@ while True:
         file.close()
         print("\n to do added\n")
         
-    elif "show" in user_input:
+    elif user_input.startswith("show"):
         print("\n This is your to do list \n\n")
         file = open("todos.txt", "r")
         todos = file.readlines()
@@ -36,38 +36,46 @@ while True:
 
             print(f"{index+1}-{item}")
     
-    elif "edit" in user_input:
-        file = open("todos.txt", "r")
-        todos = file.readlines()
-        file.close()
+    elif user_input.startswith("edit"):
+        try:
+            file = open("todos.txt", "r")
+            todos = file.readlines()
+            file.close()
 
-        edit_num = user_input[5:]
-        edit_item_num = int(edit_num)-1
+            edit_num = user_input[5:]
+            edit_item_num = int(edit_num)-1
 
-        edit_item = input("\n What do you want to edit it to: ") + "\n"
-        todos[edit_item_num] = edit_item 
+            edit_item = input("\n What do you want to edit it to: ") + "\n"
+            todos[edit_item_num] = edit_item 
 
-        file = open("todos.txt", "w")
-        file.writelines(todos)
-        file.close()
+            file = open("todos.txt", "w")
+            file.writelines(todos)
+            file.close()
 
-        print("\n item edited")
+            print("\n item edited")
+        except ValueError:
+            print("your command is not valid")
+            continue
 
-    elif "complete" in user_input:
+    elif user_input.startswith("complete"):
+        try:
+            file = open("todos.txt", "r")
+            todos = file.readlines()
+            file.close()
 
-        file = open("todos.txt", "r")
-        todos = file.readlines()
-        file.close()
+            complete_num = int(user_input[9:])
+            completed_todo = todos[complete_num-1]
+            todos.pop(complete_num-1)
+            file = open("todos.txt", "w")
+            file.writelines(todos)
+            file.close()
+            print(f"you completed to do {complete_num}-{completed_todo}")
 
-        complete_num = int(user_input[9:])
-        completed_todo = todos[complete_num-1]
-        todos.pop(complete_num-1)
-        file = open("todos.txt", "w")
-        file.writelines(todos)
-        file.close()
-        print(f"you completed to do {complete_num}-{completed_todo}")
+        except IndexError:
+            print("There is no item with that number")
+            continue
 
-    elif "quit" in user_input:
+    elif user_input.startswith("quit"):
             print("Thank you! see you soon!")
             break
     else:
